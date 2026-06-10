@@ -25,3 +25,7 @@ Win detection
 - [ ] Mobile support (?)
 
 ##License
+
+
+ADDITIONS: BOARD.JAVA, RULES.JAVA
+REMOVE: gameTTT.JAVA FOR NEW IMPLEMENTATIONS
