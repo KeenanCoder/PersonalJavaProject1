@@ -1,26 +1,43 @@
-//package
+package com.MegaTTT.controller;
 
 import java.util.Scanner;
-//import others
+//import all elements from springboot
+import org.springframerwork.web.bind.annotation.*
+import org.springframerwork.web.bind.annotation.Autowired;
+import java.util.List;
 
+//FIXME: Add rest api to project or springboot
+@RestController
+@RequestMapping("/api/users")
 public class userController {
-	
-	//FIXME: private variables
 
-	//clean constructor
-	public userController() {
-		
+	@Autowired;
+	private UserService userService;
+
+	@GetMapping;
+	public List<User> getAll() {
+		return userService.getAllUsers();
 	}
 	
-	public userController(/*add parameters here*/) {
-		//FIXME: this.variable
+	@GetMapping("/{id}")
+	public User getId(@PathVariable Long id) {
+		return userService.getUserById(id);
 	}
 	
-	public void setMethod() {
-		
+	@PostMapping
+	public User create(@RequestBody User user) {
+		return userService.createUser(user);
 	}
 	
-	public void getMethod() {
-		
+	@PutMapping("/{id}")
+	public User update(@PathVariable Long id) {
+		return userService.updateUser(id);
 	}
+	
+	@DeleteMapping("/{id}")
+	public void delete(@PathVariable Long id) {
+		userService.deleteUser(id);
+	}
+
+
 }
