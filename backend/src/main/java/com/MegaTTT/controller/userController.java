@@ -1,19 +1,16 @@
-//package
+package controller;
 
-import java.util.Scanner;
+//import java.util.Scanner;
 //import others
 
 public class userController {
-	
-	//FIXME: private variables
 
 	//clean constructor
 	public userController() {
 		
 	}
 	
-	public userController(/*add parameters here*/) {
-		//FIXME: this.variable
+	public userController(int parameter) {
 	}
 	
 	public void setMethod() {
