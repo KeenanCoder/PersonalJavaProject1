@@ -1,6 +1,7 @@
 package model;
 
 public class TwoPlayerMode {
+
     public void getMode(int choice){
         
     }
