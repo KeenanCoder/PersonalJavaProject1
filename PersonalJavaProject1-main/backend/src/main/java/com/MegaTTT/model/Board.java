@@ -49,7 +49,7 @@ public class Board {
         return false;
     }
 
-    //method for validating if the user wins
+    //method for checking if there is 3 in a row after every move
     public boolean checkWinCondition(char player){
         //run a for loop so that it checks all positions
         //to see if there is one where there is 3 in a row
@@ -86,7 +86,18 @@ public class Board {
         return false;
     }
 
-    //FIXME: isFUll method for checking if the game is a tie
+    //method for checking who exactly won the game
+    //by calling the win condition method and comparing player X and O
+    public char getWinner(){
+        if(checkWinCondition('X')){
+            return 'X';
+        }
+         if(checkWinCondition('O')){
+            return 'O';
+        }
+        return ' ';
+    }
+
     //method for if the board is full without a winner
     public boolean isFull(){
         for(int row = 0; row < grid.length; row++){
@@ -97,6 +108,12 @@ public class Board {
             }
         }
         return true;
+    }
+
+    //method for checking if it is a tie since a fullboard can also mean that a player won
+    //it returns the methods isFull as true and getWinner as neither X or O player
+    public boolean tieCondition(){
+        return isFull() && getWinner() == ' ';
     }
 
     //method for printing out the board of the game
