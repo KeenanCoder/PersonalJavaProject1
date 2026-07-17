@@ -1,4 +1,5 @@
 const megaBoardEl = document.getElementById('megaBoard');
+let currentPlayer = 'X';
 
 // builds the 9 mini-boards, each with 9 cells
 //uses 2 loops
@@ -27,10 +28,48 @@ for (let mainRow = 0; mainRow < 3; mainRow++) {
   }
 }
 
-//handles a cell click (placeholder for now — wired to backend later)
-function handleCellClick(e) {
-  const { mainRow, mainCol, miniRow, miniCol } = e.target.dataset;
-  console.log('Clicked:', mainRow, mainCol, miniRow, miniCol);
+//calls the backend
+async function handleCellClick(e){
+  const cell = e.target;
 
-  // later: send this to /api/move via fetch, then re-render using the response
+  if(cell.classList.contains('taken')) return;
+
+  const{ mainRow, mainCol, miniRow, miniCol} = cell.dataset;
+
+  try{
+    const response = await fetch('http://localhost:8080/api/move', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        mainRow: Number(mainRow),
+        mainCol: Number(mainCol),
+        miniRow: Number(miniRow),
+        miniCol: Number(miniCol),
+        player: currentPlayer
+      })
+    });
+
+    const data = await response.json();
+
+    if(data.success){
+      cell.textContent = currentPlayer;
+      cell.classList.add('taken');
+
+      document.getElementById('status').textContent =
+  data.gameOver
+    ? (data.winner.trim() ? `${data.winner} wins!` : "It's a draw!")
+    : '';
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X' //swaps turns
+    }
+    //when the move does not work
+    else {
+      document.getElementById('status').textContent = 'Invalid move - try again!';
+    }
+  }
+  //when it feels to reach the backend it will display
+  //Could not connect to server
+  catch (err){
+    console.error('Failed to reach backend:', err);
+    document.getElementById('status').textContent = 'Could not connect to server';
+  }
 }
