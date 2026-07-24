@@ -1,7 +1,8 @@
-package model;
+package com.PersonalJavaProject.megatictactoe.model;
 
 public class MainBoard {
 
+    //private variables
     private Board[][] miniBoards;
     private Board mainBoard;
     private int activeRow;
@@ -20,6 +21,14 @@ public class MainBoard {
         activeCol = -1;
     }
 
+    public int getActiveRow(){
+        return activeRow;
+    }
+
+    public int getActiveCol(){
+        return activeCol;
+    }
+
     //checks to see if the slot holding the mini board has already been completed, tied or won
     public boolean miniBoardAvailability(int mainRow, int mainCol){
         Board mini = miniBoards[mainRow][mainCol];
@@ -35,6 +44,11 @@ public class MainBoard {
 
     //this method checks to validate the moves the player can do
     public boolean makeMove(int mainRow, int mainCol, int miniRow, int miniCol, char player){
+
+        if(activeRow != -1 && (mainRow != activeRow || mainCol != activeCol)){
+            System.out.println("You must play in the highlighted mini-board!");
+            return false;
+        }
         
         //checks to see if the place where player chose is available or already taken
         if(!miniBoardAvailability(mainRow, mainCol)){
@@ -57,16 +71,25 @@ public class MainBoard {
         }
 
         //the miniBoard move sends the player to the main position next
-        if(miniBoardAvailability(miniRow, miniCol)){
-            activeRow = miniRow;
-            activeCol = miniCol;
+        if(miniBoardAvailability(mainRow, mainCol)){
+            activeRow = mainRow;
+            activeCol = mainCol;
         }
         else{
             activeRow = -1;
             activeCol = -1;
         }
-
         return true;
+    }
+
+    public char[][] getMiniBoardWinners(){
+        char[][] winners = new char[3][3];
+        for(int r = 0; r < 3; r++){
+            for(int c = 0; c < 3; c++){
+                winners[r][c] = miniBoards[r][c].getWinner();
+            }
+        }
+        return winners;
     }
 
     //checks to see if the player loses or ties

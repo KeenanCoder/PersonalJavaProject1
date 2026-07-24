@@ -1,4 +1,4 @@
-package model;
+package com.PersonalJavaProject.megatictactoe.model;
 
 public class Board {
     
