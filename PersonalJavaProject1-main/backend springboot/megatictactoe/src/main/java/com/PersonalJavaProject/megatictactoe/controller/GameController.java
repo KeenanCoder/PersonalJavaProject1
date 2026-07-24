@@ -1,5 +1,6 @@
 package com.PersonalJavaProject.megatictactoe.controller;
 
+//imports the springboot framework
 import com.PersonalJavaProject.megatictactoe.model.MainBoard;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,8 @@ public class GameController {
         boolean success = game.makeMove(req.mainRow, req.mainCol, req.miniRow, req.miniCol,
             req.player
         );
-        return new MoveResponse(success, game.getMainBoardWin(), game.isGameOver());
+        return new MoveResponse(success, game.getMainBoardWin(), game.isGameOver(),
+        game.getActiveRow(), game.getActiveCol(), game.getMiniBoardWinners());
     }
 
     @PostMapping("/new-game")
@@ -35,10 +37,18 @@ class MoveResponse{
     public boolean success;
     public char winner;
     public boolean gameOver;
+    public int activeRow;
+    public int activeCol;
+    public char[][] miniBoardWinners;
 
-    public MoveResponse(boolean success, char winner, boolean gameOver){
+    public MoveResponse(boolean success, char winner, boolean gameOver,
+        int activeRow, int activeCol, char[][] miniBoardWinners){
         this.success = success;
         this.winner = winner;
         this.gameOver = gameOver;
+        this.activeRow = activeRow;
+        this.activeCol = activeCol;
+        this.miniBoardWinners = miniBoardWinners;
+
     }
 }
