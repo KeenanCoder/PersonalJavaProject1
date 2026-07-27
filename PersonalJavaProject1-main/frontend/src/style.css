@@ -60,21 +60,16 @@ body::before{
 }
 
 /* dims a mini-board once it's been won or tied */
-.mini-board.won-X{
-	color: #ff004d;
-	pointer-events: none;
-}
-.mini-board.won-O{
-	color:#00838f;
-	pointer-events: none;
-}
+.mini-board.won-X,
+.mini-board.won-O,
 .mini-board.tied {
   pointer-events: none;
 }
 
-.mini-board.won-.cell,
-.mini-board.won-O .cell{
-  opacity:  0.3;
+.mini-board.won-X .cell,
+.mini-board.won-O .cell,
+.mini-board.tied .cell {
+  opacity: 0.3;
 }
 
 .mini-board-overlay {
@@ -85,10 +80,22 @@ body::before{
   justify-content: center;
   font-family: 'Press Start 2P', cursive;
   font-size: 3.5rem;
-  color: #ff004d;
   background: rgba(0, 0, 0, 0.15);
   pointer-events: none;
   z-index: 5;
+}
+
+.mini-board.won-X .mini-board-overlay {
+  color: #ff004d;
+}
+
+.mini-board.won-O .mini-board-overlay {
+  color: #00838f;
+}
+
+.mini-board.tied .mini-board-overlay {
+  color: #754375;
+  font-size: 2.5rem;
 }
 
 .cell {
@@ -364,8 +371,8 @@ h2 {
 }
 
 p {
-    font-size: 16px;
-    color: #555;
+    font-size: 18px;
+    color: #000000;
     text-align: center;
     line-height: 1.5;
     margin: 20px 0;

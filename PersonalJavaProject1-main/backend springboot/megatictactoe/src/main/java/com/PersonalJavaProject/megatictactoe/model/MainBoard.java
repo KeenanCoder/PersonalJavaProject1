@@ -83,13 +83,22 @@ public class MainBoard {
     }
 
     public char[][] getMiniBoardWinners(){
-        char[][] winners = new char[3][3];
+        char[][] status = new char[3][3];
         for(int r = 0; r < 3; r++){
             for(int c = 0; c < 3; c++){
-                winners[r][c] = miniBoards[r][c].getWinner();
+                Board mini = miniBoards[r][c];
+                if(mini.getWinner() != ' '){
+                    status[r][c] = mini.getWinner(); // 'X' or 'O'
+                }
+                else if(mini.tieCondition()){
+                    status[r][c] = 'T'; // tied
+                }
+                else{
+                    status[r][c] = ' '; // still in progress
+                }
             }
         }
-        return winners;
+        return status;
     }
 
     //checks to see if the player loses or ties

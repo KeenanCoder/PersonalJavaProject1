@@ -73,18 +73,27 @@ function updateMiniBoardWinners(miniBoardWinners){
   document.querySelectorAll('.mini-board').forEach(board => {
     const r = Number(board.dataset.mainRow);
     const c = Number(board.dataset.mainCol);
-    const winner = miniBoardWinners[r][c];
+    const status = miniBoardWinners[r][c];
 
-    board.classList.remove('won-X', 'won-O');
+    board.classList.remove('won-X', 'won-O', 'tied');
 
-    if(winner === 'X' || winner === 'O'){
-      board.classList.add(`won-${winner}`);
+    if(status === 'X' || status === 'O'){
+      board.classList.add(`won-${status}`);
 
-      //add the big overlay letter only once
       if(!board.querySelector('.mini-board-overlay')){
         const overlay = document.createElement('div');
         overlay.className = 'mini-board-overlay';
-        overlay.textContent = winner;
+        overlay.textContent = status;
+        board.appendChild(overlay);
+      }
+    }
+    else if(status === 'T'){
+      board.classList.add('tied');
+
+      if(!board.querySelector('.mini-board-overlay')){
+        const overlay = document.createElement('div');
+        overlay.className = 'mini-board-overlay tied-overlay';
+        overlay.textContent = '—'; // or "TIE"
         board.appendChild(overlay);
       }
     }
