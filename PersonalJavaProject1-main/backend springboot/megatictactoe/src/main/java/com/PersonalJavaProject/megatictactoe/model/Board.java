@@ -15,6 +15,16 @@ public class Board {
         }
     }
 
+    public Board copy(){
+    Board newBoard = new Board();
+    for(int r = 0; r < 3; r++){
+        for(int c = 0; c < 3; c++){
+            newBoard.setPosition(r, c, this.grid[r][c]);
+        }
+    }
+    return newBoard;
+}
+
     //a method that validates the row and column position
     //and can be called in the setter and getter methods
 
@@ -48,6 +58,41 @@ public class Board {
         }
         return false;
     }
+
+    // Counts lines (rows, columns, diagonals) that have exactly 2 of 'player'
+// and 1 empty cell — meaning a win is one move away
+public int countTwoInARowLines(char player){
+    int count = 0;
+    int[][] lines = {
+        {0,0, 0,1, 0,2}, {1,0, 1,1, 1,2}, {2,0, 2,1, 2,2}, // rows
+        {0,0, 1,0, 2,0}, {0,1, 1,1, 2,1}, {0,2, 1,2, 2,2}, // columns
+        {0,0, 1,1, 2,2}, {0,2, 1,1, 2,0}                    // diagonals
+    };
+
+    for(int[] line : lines){
+        char a = grid[line[0]][line[1]];
+        char b = grid[line[2]][line[3]];
+        char c = grid[line[4]][line[5]];
+
+        int playerCount = 0;
+        int emptyCount = 0;
+
+        if(a == player) playerCount++;
+        else if(a == ' ') emptyCount++;
+
+        if(b == player) playerCount++;
+        else if(b == ' ') emptyCount++;
+
+        if(c == player) playerCount++;
+        else if(c == ' ') emptyCount++;
+
+        if(playerCount == 2 && emptyCount == 1){
+            count++;
+        }
+    }
+
+    return count;
+}
 
     //method for checking if there is 3 in a row after every move
     public boolean checkWinCondition(char player){

@@ -346,6 +346,14 @@ header h1{
   background: #888;
 }
 
+.btn.locked {
+  background: #999;
+  color: #ddd;
+  cursor: not-allowed;
+  box-shadow: none;
+  pointer-events: none;
+}
+
 footer{
 	margin-top: 2rem;
 	display: flex;
