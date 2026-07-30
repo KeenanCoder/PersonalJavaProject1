@@ -13,7 +13,8 @@ Win detection for each miniboard/mainboard cell
 Tier Ranks Single Player
 
 ## 🛠️ Tech Stack
-- **Backend:** Java, Spring Boot
+- **Backend:** Java
+- **API Framework:** REST API, Spring-Boot 
 - **Frontend:** HTML5, CSS, Vanilla JS
 - **Build tool:** Maven / Gradle (?)
 - **Database:** PostgreSQL
