@@ -175,10 +175,10 @@ async function handleCellClick(e){
           scoreX++;
           document.getElementById('scoreX').textContent = scoreX;
 
-          if(mode !== 'two-player' && difficulty === 'hard'){
-            const hardWins = parseInt(localStorage.getItem('hardWins') ||
-            '0', 10) + 1;
-            localStorage.setItem('hardWins', hardWins);
+          if(mode !== 'two-player' && difficulty){
+            const key = `wins_${difficulty}`;
+            const wins = parseInt(localStorage.getItem(key) || '0', 10) + 1;
+            localStorage.setItem(key, wins);
           }
         }
         else if (winner === 'O'){
