@@ -1,15 +1,9 @@
 const megaBoardEl = document.getElementById('megaBoard');
-//FIXME: Allow the player to decide who goes first (if applicable)
-//for both single player and two player modes
-//assigns the first player to always be X
 let currentPlayer = 'X';
-//FIXME: either hardcode the initial player scores or assign it to a variable
 let scoreX = 0;
 let scoreO = 0;
 
-//reads the names/difficulty modes from the URL
 const params = new URLSearchParams(window.location.search);
-//'two-player' or null
 const mode = params.get('mode');
 const difficulty = params.get('difficulty');
 
@@ -24,9 +18,6 @@ function displayName(player){
   return player === 'X' ? nameX : nameO;
 }
 
-
-// builds the 9 mini-boards, each with 9 cells
-//uses 2 loops
 for (let mainRow = 0; mainRow < 3; mainRow++) {
   for (let mainCol = 0; mainCol < 3; mainCol++) {
     const miniBoardEl = document.createElement('div');
@@ -52,7 +43,6 @@ for (let mainRow = 0; mainRow < 3; mainRow++) {
   }
 }
 
-//updates the events going on around the board
 function updateActiveBoard(activeRow, activeCol){
   document.querySelectorAll('.mini-board').forEach(board => {
     board.classList.remove('active');
@@ -60,7 +50,6 @@ function updateActiveBoard(activeRow, activeCol){
     const c = Number(board.dataset.mainCol);
 
     if(activeRow === -1){
-      //free choice, highlights all the open boards to choose
       board.classList.add('active');
     }
     else if(r === activeRow && c === activeCol){
@@ -79,7 +68,6 @@ function updateMiniBoardWinners(miniBoardWinners){
 
     if(status === 'X' || status === 'O'){
       board.classList.add(`won-${status}`);
-
       if(!board.querySelector('.mini-board-overlay')){
         const overlay = document.createElement('div');
         overlay.className = 'mini-board-overlay';
@@ -89,15 +77,29 @@ function updateMiniBoardWinners(miniBoardWinners){
     }
     else if(status === 'T'){
       board.classList.add('tied');
-
       if(!board.querySelector('.mini-board-overlay')){
         const overlay = document.createElement('div');
         overlay.className = 'mini-board-overlay tied-overlay';
-        overlay.textContent = '—'; // or "TIE"
+        overlay.textContent = '—';
         board.appendChild(overlay);
       }
     }
   });
+}
+
+// NEW: finds the exact cell the CPU played and marks it
+function renderCpuMove(cpuMove, cpuPlayer){
+  if(!cpuMove) return;
+  const [mainRow, mainCol, miniRow, miniCol] = cpuMove;
+
+  const cell = document.querySelector(
+    `.cell[data-main-row="${mainRow}"][data-main-col="${mainCol}"][data-mini-row="${miniRow}"][data-mini-col="${miniCol}"]`
+  );
+
+  if(cell){
+    cell.textContent = cpuPlayer;
+    cell.classList.add('taken');
+  }
 }
 
 function showProjector(winner) {
@@ -114,13 +116,12 @@ function showProjector(winner) {
 document.getElementById('restartBtn').addEventListener('click', async () => {
   await fetch('http://localhost:8080/api/new-game', { method: 'POST' });
 
-  // reset the visual board
   document.querySelectorAll('.cell').forEach(cell => {
     cell.textContent = '';
     cell.classList.remove('taken');
   });
   document.querySelectorAll('.mini-board').forEach(board => {
-    board.classList.remove('won-X', 'won-O');
+    board.classList.remove('won-X', 'won-O', 'tied');
     const overlay = board.querySelector('.mini-board-overlay');
     if (overlay) overlay.remove();
   });
@@ -132,7 +133,6 @@ document.getElementById('restartBtn').addEventListener('click', async () => {
   updateActiveBoard(-1, -1);
 });
 
-//calls the backend
 async function handleCellClick(e){
   const cell = e.target;
 
@@ -140,7 +140,6 @@ async function handleCellClick(e){
 
   const{ mainRow, mainCol, miniRow, miniCol} = cell.dataset;
 
-  //fetches using the localhost port number
   try{
     const response = await fetch('http://localhost:8080/api/move', {
       method: 'POST',
@@ -150,7 +149,8 @@ async function handleCellClick(e){
         mainCol: Number(mainCol),
         miniRow: Number(miniRow),
         miniCol: Number(miniCol),
-        player: currentPlayer
+        player: currentPlayer,
+        difficulty: mode === 'two-player' ? null : difficulty // NEW
       })
     });
 
@@ -160,6 +160,12 @@ async function handleCellClick(e){
       cell.textContent = currentPlayer;
       cell.classList.add('taken');
 
+      // NEW: render the CPU's move if the backend made one
+      if(data.cpuMove){
+        const cpuPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        renderCpuMove(data.cpuMove, cpuPlayer);
+      }
+
       updateActiveBoard(data.activeRow, data.activeCol);
       updateMiniBoardWinners(data.miniBoardWinners);
 
@@ -168,6 +174,12 @@ async function handleCellClick(e){
         if(winner === 'X'){
           scoreX++;
           document.getElementById('scoreX').textContent = scoreX;
+
+          if(mode !== 'two-player' && difficulty){
+            const key = `wins_${difficulty}`;
+            const wins = parseInt(localStorage.getItem(key) || '0', 10) + 1;
+            localStorage.setItem(key, wins);
+          }
         }
         else if (winner === 'O'){
           scoreO++;
@@ -180,7 +192,9 @@ async function handleCellClick(e){
         document.getElementById('status').textContent = '';
       }
 
-      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      if(!data.cpuMove){
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+}
     }
     else {
       document.getElementById('status').textContent = 'Invalid move - try again!';
@@ -192,7 +206,6 @@ async function handleCellClick(e){
   }
 }
 
-//FIXME: explain these lines of code for clarity
 fetch('http://localhost:8080/api/new-game', {method: 'POST'}).then(() => {
   updateActiveBoard(-1, -1);
 })
