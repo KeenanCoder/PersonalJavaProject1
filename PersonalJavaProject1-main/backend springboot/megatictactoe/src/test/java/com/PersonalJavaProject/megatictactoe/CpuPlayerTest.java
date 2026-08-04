@@ -2,6 +2,7 @@ package com.PersonalJavaProject.megatictactoe;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
 import com.PersonalJavaProject.megatictactoe.model.MainBoard;
 import com.PersonalJavaProject.megatictactoe.model.CpuPlayer;
 
@@ -44,5 +45,18 @@ public class CpuPlayerTest {
         assertTrue(game.getLegalMoves().stream().anyMatch(m ->
             m[0] == move[0] && m[1] == move[1] && m[2] == move[2] && m[3] == move[3]
         ));
+    }
+
+    @Test
+    void impossibleFindsClearWinningMove(){
+        MainBoard game = new MainBoard();
+
+        game.makeMove(0, 0, 0, 0, 'X');
+        game.makeMove(0, 0, 1, 1, 'O');
+        game.makeMove(0, 0, 0, 1, 'X');
+
+        int[] move = CpuPlayer.getComputerMove(game, 'X', impossible);
+
+        assertArrayEquals(new int[]{0, 0, 0, 2}, move);
     }
 }
