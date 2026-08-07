@@ -1,4 +1,4 @@
-package com.PersonalJavaProject.megatictactoe;
+package com.PersonalJavaProject.megatictactoe.service;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,7 +55,7 @@ public class CpuPlayerTest {
         game.makeMove(0, 0, 1, 1, 'O');
         game.makeMove(0, 0, 0, 1, 'X');
 
-        int[] move = CpuPlayer.getComputerMove(game, 'X', impossible);
+        int[] move = CpuPlayer.getComputerMove(game, 'X', "impossible");
 
         assertArrayEquals(new int[]{0, 0, 0, 2}, move);
     }

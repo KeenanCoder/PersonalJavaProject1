@@ -1,4 +1,4 @@
-package com.PersonalJavaProject.megatictactoe;
+package com.PersonalJavaProject.megatictactoe.model;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
